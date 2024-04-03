@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <exec.mainClass>banco.Principal</exec.mainClass>
+        <exec.mainClass>bancoV2.Principal</exec.mainClass>
     </properties>
     <name>BancoV2</name>
 </project>
