@@ -67,7 +67,7 @@ public class Banco {
         }
     }
     
-    public void cargarDatos() throws Exception {
+    public void cargarDatos() {
         String iban, dni, titular, correo;
 
         // Itera hasta el número actual de cuentas agregadas, no hasta la capacidad máxima
@@ -96,17 +96,23 @@ public class Banco {
         return consulta.toString();
     }
     
-    public boolean borrarCuenta(String codigo) {
-        for (int i = 0; i < numeroCuentas; i++) {
+    public void borrarCuenta(String codigo) throws Exception {
+        boolean encontrada = false;
+
+        for (int i = 0; i < cuentas.size(); i++) {
             if (cuentas.get(i).getIban().equals(codigo)) {
                 cuentas.remove(i);
-                numeroCuentas--;
-                return true;
+                
+                encontrada = true;
             }
         }
-        return false;
-    }
 
+        if (encontrada == false) {
+            throw new Exception("La cuenta con IBAN " + codigo + " no existe en el banco " + nombre);
+        } else {
+            numeroCuentas--; // Restar 1 al contador de cuentas si se ha eliminado una cuenta
+        }
+    }
     
     public boolean existeCuenta(String codigo) {       
         for (int i = 0; i < numeroCuentas; i++) {
