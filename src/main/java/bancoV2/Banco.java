@@ -21,8 +21,8 @@ public class Banco {
     
     public Banco(String nombre) {
         this.nombre = nombre;
-        this.cuentas = new ArrayList<>();
-        this.cuentas.ensureCapacity(MAX_CUENTAS);
+        Banco.cuentas = new ArrayList<>();
+        Banco.cuentas.ensureCapacity(MAX_CUENTAS);
         this.numeroCuentas = 0;
     }
     
@@ -58,26 +58,26 @@ public class Banco {
     
     // Inicio Metodos Publicos
     public boolean agregarCuenta(String codigo, String dni, String nombreTitular, String correo) {
-        if (this.numeroCuentas > MAX_CUENTAS) {
+        if (this.numeroCuentas >= MAX_CUENTAS) {
             return false;
         } else {
-            this.cuentas.add(numeroCuentas++, new Cuenta(codigo, dni ,nombreTitular, correo));
-            
+            Banco.cuentas.add(new Cuenta(codigo, dni ,nombreTitular, correo));
+            numeroCuentas++;
             return true;
         }
     }
     
-    public void cargarDatos() {
+    public void cargarDatos() throws Exception {
         String iban, dni, titular, correo;
 
         // Itera hasta el número actual de cuentas agregadas, no hasta la capacidad máxima
-        for (int i = 0; i < MAX_CUENTAS; i++) {
-            iban = String.format("IBAN%03d", i);  // Asegúrate de que el formato sea adecuado
-            dni = String.format("%08dA", i);
-            titular = String.format("Titular%03d", i);
-            correo = String.format("ejemplo%03d@gmail.com", i);
+        for (int i = 0; i <= MAX_CUENTAS; i++) {
+            iban = String.format("IBAN%03d", (i + 1));
+            dni = String.format("%08dA", (i + 1));
+            titular = String.format("Titular%03d", (i + 1));
+            correo = String.format("ejemplo%03d@gmail.com", (i + 1));
 
-            this.agregarCuenta(iban, dni, titular, correo);
+            agregarCuenta(iban, dni, titular, correo);
         }
     }
     
