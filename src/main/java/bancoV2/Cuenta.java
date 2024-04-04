@@ -5,13 +5,14 @@
 
 package bancoV2;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
  * @author Fer
 */
 
-public class Cuenta {
+public class Cuenta implements Serializable {
     private String iban;
     private String dni;
     private String titular;

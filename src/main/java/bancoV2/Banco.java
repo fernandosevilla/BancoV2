@@ -4,14 +4,20 @@
 
 package bancoV2;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * @author Fer
 */
 
-public class Banco {
-
+public class Banco implements Serializable {
+    private static final long serialVersionUID = 1L; 
     private String nombre;
     private static ArrayList<Cuenta> cuentas;
     private int numeroCuentas;
@@ -108,7 +114,7 @@ public class Banco {
         }
 
         if (encontrada == false) {
-            throw new Exception("La cuenta con IBAN " + codigo + " no existe en el banco " + nombre);
+            throw new Exception("Error: La cuenta con IBAN " + codigo + " no existe en el banco " + nombre);
         } else {
             numeroCuentas--; // Restar 1 al contador de cuentas si se ha eliminado una cuenta
         }
@@ -125,6 +131,10 @@ public class Banco {
     }
     
     public String listadoCuentas() {
+        if (cuentas == null) {
+            return "No hay cuentas en el banco";
+        }
+        
         StringBuilder listado = new StringBuilder();
         
         listado.append("Total de cuentas: ").append(numeroCuentas).append("\n");
@@ -169,6 +179,28 @@ public class Banco {
             cuenta.retirarDinero(importe);
             return true;
         }
+    }
+    
+    public void guardarBanco(String nombreArchivo) throws IOException {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(nombreArchivo))) {
+            outputStream.writeObject(this);
+        } catch (IOException e) {
+            throw new IOException("Error: No se ha podido guardar el archivo: " + nombreArchivo + "\n" + e);
+        }
+    }
+    
+    public static Banco cargarEstado(String nombreArchivo) throws ClassNotFoundException, IOException {
+        Banco miBanco;
+        
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(nombreArchivo))) {
+            miBanco = (Banco) inputStream.readObject();
+        } catch (IOException e) {
+            throw new IOException("Error: No se ha podido leer el archivo: " + nombreArchivo + "\n" + e);
+        } catch (ClassNotFoundException e) {
+            throw new ClassNotFoundException("Error: No se ha podido abrir el archivo: " + nombreArchivo + "\n" + e);
+        }
+        
+        return miBanco;
     }
     
     // Este metodo ya es por mi cuenta

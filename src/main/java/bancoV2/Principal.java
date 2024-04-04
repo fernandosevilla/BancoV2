@@ -4,6 +4,7 @@
  */
 package bancoV2;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ public class Principal {
         Scanner teclado = new Scanner(System.in);
         Banco miBanco = null;
         int opcion;
+        
 
         do {
             System.out.println("1. Crear Banco");
@@ -25,7 +27,10 @@ public class Principal {
             System.out.println("5. Ver Datos de Cuenta");
             System.out.println("6. Ver Informe Total del Banco");
             System.out.println("7. Borrar Cuenta");
-            System.out.println("8. Salir");
+            System.out.println("8. Guardar Datos");
+            System.out.println("9. Cargar Datos");
+            System.out.println("10. Salir");
+
 
             System.out.print("Selecciona una opción: ");
             opcion = teclado.nextInt();
@@ -60,7 +65,7 @@ public class Principal {
                         } else {
                             miBanco = new Banco(nombreBanco);
                             System.out.println("El banco " + nombreBanco + " ha sido creado");
-                            miBanco.cargarDatos();
+//                            miBanco.cargarDatos();
                         }
                     }
                     break;
@@ -187,10 +192,40 @@ public class Principal {
 
                     break;
                 case 8:
+                    if (miBanco != null) {
+                        System.out.print("Escribe el nombre del archivo donde se va a guardar: ");
+                        String nombreArchivo = teclado.nextLine() + ".dat";
+                        
+                        miBanco.guardarBanco(nombreArchivo);
+                        System.out.println("El banco se ha guardado bien en el archivo");
+                    } else {
+                        System.out.println("No puedes guardar un banco que no está creado");
+                    }
+                    
+                    break;
+                case 9:
+                    System.out.print("Escribe el nombre del archivo que corresponda al banco que quieres cargar: ");
+                    String nombreArchivo = teclado.nextLine() + ".dat";
+                    
+                    miBanco = Banco.cargarEstado(nombreArchivo);
+                    System.out.println("El archivo se ha cargado bien");
+                    
+                    break;
+                case 10:
                     break;
             }
-        } while (opcion != 8);
+        } while (opcion != 10);
 
         teclado.close();
+        
+    }
+    
+    public static void guardarDatos(Banco miBanco, String archivo) {
+        try {            
+            miBanco.guardarBanco(archivo);
+            System.out.println("El banco se ha guardado en el archivo" + archivo);
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
     }
 }
